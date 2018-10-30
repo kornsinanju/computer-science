@@ -5,13 +5,13 @@
 #When n≢0 (mod 2, 5), s=0, and this becomes a purely periodic decimal with
 #                            10^t=1 (mod n).
 #In the code I change the variable a liitle by making s = s+t. Also I use bucket theory to save possible 's' value because
-# the idea is just to find what is the nearest minimum t that 10^t (mod n) give the same remainder as 10^(s+t) mod(n) where n = divider(input).
+# the idea is just to find what is the positive minimum t and s that 10^t (mod n) gives
+# the same remainder as 10^(s+t) mod(n) where n = divider(input).
 #After I implement this theory into the code(line 18-32). I will know exactly from when is the decimal be repetitive and how long.
-#After that, I use this information as the define condition for the loop when i calculate the result from
-#divition. Noted that when the decimal is finite, t-s will be equal to one and the next quotient
-# of the calculation is 0(finite deciamal is when 0 is repetitive at the end of the number)
-#After that I use the common long divition method under the length t to get the answer. Noted that you need to add the condition for when
-# will you add '(' and ')' (further explantion along the code)
+#After that, I use this information as the define condition in  the common long divition method under the length t.
+#Noted that when the decimal is finite, t-s will be equal to one and the next quotient
+# of the calculation is 0 (finite deciamal is when 0 is repetitive at the end of the number)
+#In addition to that, I also need to add the condition for when will I add '(' and ')' (further explantion along the code)
 
 def main():
     num = int(input("input: "))
@@ -23,11 +23,11 @@ def main():
         count = 0 #will be used for number of s+t and pointer of the postion of decimal
         x = 1# start implementing the decimal method theory from 10^0(equal to one)
         done = False
-        bucket = [ 0 for i in range(num+1) ]# create bucket array that will be saved the possible t value by bucket method(its size should be equal to the input number).Noted that 0 means unoccupied.
+        bucket = [ 0 for i in range(num+1) ]# create bucket array that will save the possible t value by bucket method(its size should be equal to all possible remainder).Noted that 0 means unoccupied.
         while not done:
             remainder = x%num # mod it by n(input)
             if(bucket[remainder]==0 and remainder!=1):
-                bucket[remainder]=count # use bucket theory to save possible "s" value in it
+                bucket[remainder]=count # use bucket method to save possible "s" value in it
             elif(remainder==1): #specific case when the remainder equal '1' since if i use the upper condition, the program will save bucket[1]=0 (t=0) and that make it seems that it is not occupied (saved with t=0 value).
                 if(count != 0): #to make it skip the first loop
                     done = True #stop loop
