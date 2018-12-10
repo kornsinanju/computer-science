@@ -1,2 +1,2 @@
-a = list(map(int,input().split()))
+a = list(map(ord,input().split()))
 print(a)
