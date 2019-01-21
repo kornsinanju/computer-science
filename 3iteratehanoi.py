@@ -2,8 +2,8 @@ import time
 import os
 tick=0
 def print_pegs(pegs):
+    global move
     global tick
-    global n
     """Prints the pegs and the disks they contain."""
     #for i, peg in enumerate(pegs):
     #    print(f"{i}: {pegs[i]}")
@@ -27,10 +27,10 @@ def print_pegs(pegs):
                         print(" ",end="")
         print("")
     print(f"move count : {tick}")
-    if(tick<(2**n)-1):
+    if(tick<move-1):
         time.sleep(0.6)
         os.system('cls')
-def move_disk(pegs, disk, source, dest):
+def move_disk(pegs, source, dest):
     global tick
     """Moves a single disk from peg source to peg dest.
 
@@ -40,7 +40,6 @@ def move_disk(pegs, disk, source, dest):
         source ({0,1,2}):   Source peg (i.e., in which the tower is originally)
         dest ({0,1,2}):     Destination peg (i.e., where to put the tower)
     """
-    print(f"STEP: move disk {disk} from peg {source} to peg {dest}")
     # check if the move is valid
     #if source < 0 or 2 < source: raise AssertionError("source index out of bounds")
     #if dest   < 0 or 2 < dest:   raise AssertionError("destination out of bounds")
@@ -48,8 +47,23 @@ def move_disk(pegs, disk, source, dest):
     #if pegs[dest] and (pegs[dest][-1] <= disk): raise AssertionError("destination has smaller disk")
 
     # do the move
-    pegs[source].pop()
-    pegs[dest].append(disk)
+    if(pegs[source] and pegs[dest]):
+        if(pegs[source][-1]<pegs[dest][-1]):
+            disk=pegs[source].pop()
+            print(f"STEP: move disk {disk+1} from peg {source} to peg {dest}")
+            pegs[dest].append(disk)
+        else:
+            disk=pegs[dest].pop()
+            print(f"STEP: move disk {disk+1} from peg {dest} to peg {source}")
+            pegs[source].append(disk)
+    elif(pegs[source]):
+        disk=pegs[source].pop()
+        print(f"STEP: move disk {disk+1} from peg {source} to peg {dest}")
+        pegs[dest].append(disk)
+    elif(pegs[dest]):
+        disk=pegs[dest].pop()
+        print(f"STEP: move disk {disk+1} from peg {dest} to peg {source}")
+        pegs[source].append(disk)
     tick+=1
     # show the new state
     print_pegs(pegs)
@@ -69,21 +83,28 @@ def hanoi(n):
     print_pegs(pegs)
 
     # move the tower
-    move_tower(pegs, n-1, 0, 1)
+    move_tower(pegs)
 
 
 
-def move_tower(pegs, disk, source, dest):
-    spare = 3-source-dest    # number of the third peg (i.e., neither source nor dest)
-    # TODO: (code missing) solve the Tower of Hanoi puzzle.
-    if disk>=1:
-        move_tower(pegs,disk-1,source,spare)
-        move_disk(pegs,disk,source,dest)
-        move_tower(pegs,disk-1,spare,dest)
-    else :
-        move_disk(pegs,disk,source,dest)
-    # use function move_disk(...) to move a disk from one peg to another.
+def move_tower(pegs):
+    global move
+    global n
+    if(n % 2 == 1):
+        d=1
+        a=2
+    else:
+        d=2
+        a=1
+    for i in range(1,move):
+        if(i % 3 == 1):
+            move_disk(pegs,0,d)
+        elif(i % 3 == 2):
+            move_disk(pegs,0,a)
+        elif(i % 3 == 0):
+            move_disk(pegs,a,d)
 
 n = int(input("n = "))
 os.system('cls')
+move = 2**n
 hanoi(n)
