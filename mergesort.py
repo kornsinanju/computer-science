@@ -27,19 +27,20 @@ def merge(p,q):
     return r
 def mergesort(a):
     n = len(a)
-    print(n)
+    #print(n)
     if n == 1 :
         return a
     else:
         p = mergesort(a[:n//2])
         q = mergesort(a[n//2:])
-        print(f"merge {p} and {q}")
+        #print(f"merge {p} and {q}")
         return merge(p,q)
-"""
+
 def startsort(array):
     a=array.copy()
     a = mergesort(a)
     return a
-"""
+
 a = [5,9,4,0,7,3,1,8]
-print(mergesort(a))
+print(startsort(a))
+print(a)
